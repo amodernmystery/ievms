@@ -57,32 +57,6 @@ check_virtualbox() {
     fi
 }
 
-install_unrar() {
-    case $kernel in
-        Darwin) download_unrar ;;
-        Linux) fail "Linux support requires unrar (sudo apt-get install for Ubuntu/Debian)" ;;
-    esac
-}
-
-download_unrar() {
-    url="http://www.rarlab.com/rar/rarosx-4.0.1.tar.gz"
-    archive="rar.tar.gz"
-
-    log "Downloading unrar from ${url} to ${ievms_home}/${archive}"
-    if ! curl -L "${url}" -o "${archive}"
-    then
-        fail "Failed to download ${url} to ${ievms_home}/${archive} using 'curl', error code ($?)"
-    fi
-
-    if ! tar zxf "${archive}" -C "${ievms_home}/" --no-same-owner
-    then
-        fail "Failed to extract ${ievms_home}/${archive} to ${ievms_home}/," \
-            "tar command returned error code $?"
-    fi
-
-    hash unrar 2>&- || fail "Could not find unrar in ${ievms_home}/rar/"
-}
-
 check_unrar() {
     PATH="${PATH}:${ievms_home}/rar"
     hash unrar 2>&- || install_unrar
